@@ -1,4 +1,4 @@
-package com.util.cbba.cadicitymeasure.ui.main;
+package com.util.cbba.caducitymeasure.ui.main;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.util.cbba.cadicitymeasure.R;
+import com.util.cbba.caducitymeasure.R;
 
 public class MainFragment extends Fragment {
 

@@ -1,9 +1,9 @@
-package com.util.cbba.cadicitymeasure;
+package com.util.cbba.caducitymeasure;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.util.cbba.cadicitymeasure.ui.main.MainFragment;
+import com.util.cbba.caducitymeasure.ui.main.MainFragment;
 
 public class MainActivity extends AppCompatActivity {
 
