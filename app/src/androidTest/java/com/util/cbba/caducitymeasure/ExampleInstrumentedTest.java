@@ -1,4 +1,4 @@
-package com.util.cbba.cadicitymeasure;
+package com.util.cbba.caducitymeasure;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
