@@ -12,11 +12,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/recyclerview_item" />
-
-    <Button
-        android:id="@+id/addNewEntry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:text="Add New Entry" />
 </LinearLayout>
