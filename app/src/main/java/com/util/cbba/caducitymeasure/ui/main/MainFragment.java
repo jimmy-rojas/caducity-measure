@@ -2,6 +2,7 @@ package com.util.cbba.caducitymeasure.ui.main;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.util.cbba.caducitymeasure.MainActivity;
 import com.util.cbba.caducitymeasure.R;
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 import com.util.cbba.caducitymeasure.ui.main.adapter.ItemListAdapter;
@@ -23,6 +25,8 @@ public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     private ItemListAdapter adapter;
 
+    private MainActivity mainActivity;
+
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -33,6 +37,12 @@ public class MainFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+        view.findViewById(R.id.addNew).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.navigate(AddEntryFragment.newInstance());
+            }
+        });
         adapter = new ItemListAdapter(getActivity().getApplicationContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -50,6 +60,20 @@ public class MainFragment extends Fragment {
                 adapter.setItems(mViewModel.getAllWords().getValue());
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            mainActivity = (MainActivity) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mainActivity = null;
     }
 
 }

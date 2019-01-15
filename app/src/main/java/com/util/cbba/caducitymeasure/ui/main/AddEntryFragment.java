@@ -2,6 +2,7 @@ package com.util.cbba.caducitymeasure.ui.main;
 
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.util.cbba.caducitymeasure.MainActivity;
 import com.util.cbba.caducitymeasure.R;
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 
@@ -24,6 +26,8 @@ import java.util.Date;
 public class AddEntryFragment extends Fragment {
 
     private AddEntryViewModel mViewModel;
+    private MainActivity mainActivity;
+
     private TextView expDate;
     private TextInputEditText itemName;
     private TextInputEditText expDesc;
@@ -59,6 +63,7 @@ public class AddEntryFragment extends Fragment {
                 mViewModel.insert(item);
                 cleanForm();
                 Toast.makeText(getActivity(), "Guardado", Toast.LENGTH_LONG).show();
+                mainActivity.navigate(MainFragment.newInstance());
             }
         });
         view.findViewById(R.id.btnDate).setOnClickListener(new View.OnClickListener() {
@@ -91,6 +96,20 @@ public class AddEntryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(AddEntryViewModel.class);
         // TODO: Use the ViewModel
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            mainActivity = (MainActivity) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mainActivity = null;
     }
 
 }
