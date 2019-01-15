@@ -2,6 +2,7 @@ package com.util.cbba.caducitymeasure.ui.main.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.WordVi
     public void onBindViewHolder(WordViewHolder holder, int position) {
         if (mWords != null) {
             Item current = mWords.get(position);
-            holder.wordItemView.setText(current.getName() + current.getExpirationDate());
+            holder.wordItemView.setText(String.format("Item: %s Desc: %s Exp: %s",
+                    current.getName(),
+                    (TextUtils.isEmpty(current.getDescription()) ? " " : current.getDescription()),
+                    current.getExpirationDate()));
         } else {
             // Covers the case of data not being ready yet.
             holder.wordItemView.setText("No Items");

@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Cadicity Measure</string>
+    <string name="app_name">Medida de Caducidad</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+    <string name="add_entry">Add New Entry</string>
+    <string name="home">Home</string>
+    <string name="expDateHint">Fecha de expiracion</string>
+    <string name="expDescHint">Descripcion</string>
+    <string name="itemNameHint">Nombre del Item</string>
 </resources>

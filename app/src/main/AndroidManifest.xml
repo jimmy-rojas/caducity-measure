@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name="com.util.cbba.caducitymeasure.MainActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
