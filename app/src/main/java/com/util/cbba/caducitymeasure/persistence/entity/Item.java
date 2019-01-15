@@ -24,6 +24,12 @@ public class Item {
     @ColumnInfo(name = "expiration_date")
     private Date expirationDate;
 
+    public Item(@NonNull String name, String description, @NonNull Date expirationDate) {
+        this.name = name;
+        this.description = description;
+        this.expirationDate = expirationDate;
+    }
+
     public int getId() {
         return id;
     }

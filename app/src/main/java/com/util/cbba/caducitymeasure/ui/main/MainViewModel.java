@@ -22,6 +22,4 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     LiveData<List<Item>> getAllWords() { return allItems; }
-
-    public void insert(Item it) { itemRepository.insert(it); }
 }
