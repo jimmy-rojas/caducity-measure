@@ -27,11 +27,15 @@ public interface ItemDao {
     @Query("DELETE FROM item")
     void deleteAll();
 
+//    @Query("SELECT * from item ORDER BY name ASC")
     @Query("SELECT * from item ORDER BY name ASC")
     LiveData<List<Item>> getAllItems();
 
     @Query("SELECT * from item ORDER BY expiration_date ASC")
     LiveData<List<Item>> getAllItemsByExpiration();
+
+    @Query("SELECT COUNT() from item WHERE date(datetime(expiration_date / 1000 , 'unixepoch')) = date('now')")
+    LiveData<Integer> isThereItemsToExpireNow();
 
     @Query("SELECT * from item WHERE expiration_date > DATETIME('now') ORDER BY expiration_date ASC")
     LiveData<List<Item>> getAllItemsByExpirationNext();
