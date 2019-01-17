@@ -59,7 +59,7 @@ public class AddEntryFragment extends Fragment {
                     return;
                 }
                 itemName.setError(null);
-                Item item = new Item(itemName.getText().toString(), expDesc.getText().toString(), pickedDate.getTime());
+                Item item = new Item(itemName.getText().toString(), expDesc.getText().toString(), pickedDate.getTime(), false);
                 mViewModel.insert(item);
                 cleanForm();
                 Toast.makeText(getActivity(), "Guardado", Toast.LENGTH_LONG).show();

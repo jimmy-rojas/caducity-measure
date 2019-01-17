@@ -7,8 +7,9 @@
     <string name="expDateHint">Fecha de expiracion</string>
     <string name="expDescHint">Descripcion</string>
     <string name="itemNameHint">Nombre del Item</string>
-    <string name="job_scheduled">Job Scheduled</string>
-    <string name="jobs_canceled">Job Canceled</string>
+
+    <string name="job_scheduled">Notificaciones habilidatas</string>
+    <string name="jobs_canceled">Notificaciones deshabilidatas</string>
 
     <string name="notificacion_title">Notificacion.</string>
     <string name="notificacion_msg">Revisar Espiracion de %1$s Item(s)</string>

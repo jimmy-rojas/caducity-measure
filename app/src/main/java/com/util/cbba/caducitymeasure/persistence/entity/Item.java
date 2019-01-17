@@ -24,10 +24,15 @@ public class Item {
     @ColumnInfo(name = "expiration_date")
     private Date expirationDate;
 
-    public Item(@NonNull String name, String description, @NonNull Date expirationDate) {
+    @NonNull
+    @ColumnInfo(name = "resolved")
+    private boolean resolved;
+
+    public Item(@NonNull String name, String description, @NonNull Date expirationDate, boolean resolved) {
         this.name = name;
         this.description = description;
         this.expirationDate = expirationDate;
+        this.resolved = resolved;
     }
 
     public int getId() {
@@ -62,5 +67,13 @@ public class Item {
 
     public void setExpirationDate(@NonNull Date expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
     }
 }

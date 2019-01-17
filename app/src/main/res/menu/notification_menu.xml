@@ -4,11 +4,11 @@
     <item
         android:id="@+id/startSchedule"
         app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:icon="@drawable/ic_menu_schedule"
         android:title="@string/enable_alert" />
     <item
         android:id="@+id/cancelSchedule"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_input_delete"
+        android:icon="@drawable/ic_menu_unschedule"
         android:title="@string/disable_alert" />
 </menu>

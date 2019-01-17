@@ -50,7 +50,7 @@ public class MainFragment extends Fragment {
         adapter = new ItemListAdapter(getActivity().getApplicationContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-
+        recyclerView.setHasFixedSize(true);
         setupSpinner(view);
         return view;
     }
