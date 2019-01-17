@@ -78,7 +78,7 @@ public class NotificationJobService extends JobService {
                 }
             }
         };
-        itemRepository.isThereItemsToExpire().observeForever(obsResult);
+        itemRepository.isThereItemsToExpireNow().observeForever(obsResult);
         return false;
     }
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.util.cbba.caducitymeasure.R;
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
+import com.util.cbba.caducitymeasure.utils.DateUtils;
 
 import java.util.List;
 
@@ -30,13 +31,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.WordVi
     public void onBindViewHolder(WordViewHolder holder, int position) {
         if (mWords != null) {
             Item current = mWords.get(position);
-            holder.wordItemView.setText(String.format("Item: %s Desc: %s Exp: %s",
-                    current.getName(),
-                    (TextUtils.isEmpty(current.getDescription()) ? " " : current.getDescription()),
-                    current.getExpirationDate()));
+            holder.expDate.setText(DateUtils.getDateSimple(current.getExpirationDate()));
+            holder.itemName.setText(current.getName());
+            holder.textDesc.setText(TextUtils.isEmpty(current.getDescription()) ? " " : current.getDescription());
         } else {
-            // Covers the case of data not being ready yet.
-            holder.wordItemView.setText("No Items");
+            holder.itemName.setText("No Item");
         }
     }
 
@@ -56,11 +55,15 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.WordVi
 
 
     class WordViewHolder extends RecyclerView.ViewHolder {
-        private final TextView wordItemView;
+        private final TextView itemName;
+        private final TextView expDate;
+        private final TextView textDesc;
 
         private WordViewHolder(View itemView) {
             super(itemView);
-            wordItemView = itemView.findViewById(R.id.textView);
+            itemName = itemView.findViewById(R.id.textView);
+            expDate = itemView.findViewById(R.id.expDate);
+            textDesc = itemView.findViewById(R.id.textDesc);
         }
     }
 }

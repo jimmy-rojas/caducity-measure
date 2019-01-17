@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 public class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
-    private final ItemDao itemDao;
+    private final IItemDao itemDao;
 
     public PopulateDbAsync(CaducityMeasureDatabase db) {
         itemDao = db.itemDao();
