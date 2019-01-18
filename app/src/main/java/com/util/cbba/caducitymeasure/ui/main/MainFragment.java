@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
         view.findViewById(R.id.addNew).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.navigate(AddEntryFragment.newInstance());
+                mainActivity.navigateToAdd();
             }
         });
 

@@ -1,5 +1,6 @@
 package com.util.cbba.caducitymeasure;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
+import com.util.cbba.caducitymeasure.ui.main.AddEntryFragment;
 import com.util.cbba.caducitymeasure.ui.main.MainFragment;
 
 import java.util.concurrent.TimeUnit;
@@ -24,13 +26,23 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    protected FragmentManager fragmentManager;
+    protected Fragment currentFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        if (savedInstanceState == null) {
-            navigate(MainFragment.newInstance(), false);
+        fragmentManager = getSupportFragmentManager();
+        currentFragment = fragmentManager.findFragmentById(R.id.container);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (currentFragment == null) {
+            navigate(MainFragment.newInstance(), StackFlag.NONE, MainActivity.TAG);
         }
     }
 
@@ -38,19 +50,6 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notification_menu, menu);
         return true;
-    }
-
-    public void navigate(Fragment fragment) {
-        navigate(fragment, true);
-    }
-
-    private void navigate(Fragment fragment, boolean putToBack) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        if (putToBack) {
-            transaction.addToBackStack(null);
-        }
-        transaction.commit();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,5 +103,42 @@ public class MainActivity extends AppCompatActivity {
         // Cancel the job for this tag
         dispatcher.cancel(TAG);
         Toast.makeText(this, R.string.jobs_canceled, Toast.LENGTH_SHORT).show();
+    }
+
+    public void navigate(Fragment fragment, StackFlag flag, String tag) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        currentFragment = fragment;
+        transaction.replace(R.id.container, currentFragment, tag);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        switch (flag) {
+            case STACK:
+                transaction.addToBackStack(null);
+                break;
+            case CLEAN_STACK:
+                cleanFragmentStack();
+                break;
+            default:
+        }
+        transaction.commit();
+    }
+    public void cleanFragmentStack() {
+        int count = fragmentManager.getBackStackEntryCount();
+        for (int i = 0; i < count; ++i) {
+            fragmentManager.popBackStackImmediate();
+        }
+    }
+
+    public void navigateToRoot() {
+        navigate(MainFragment.newInstance(), StackFlag.CLEAN_STACK, MainActivity.TAG);
+    }
+
+    public void navigateToAdd() {
+        navigate(AddEntryFragment.newInstance(), StackFlag.STACK, MainActivity.TAG);
+    }
+
+    public enum StackFlag {
+        STACK,
+        CLEAN_STACK,
+        NONE
     }
 }

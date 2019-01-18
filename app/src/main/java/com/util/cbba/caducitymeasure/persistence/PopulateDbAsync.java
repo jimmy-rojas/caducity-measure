@@ -19,7 +19,10 @@ public class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
         itemDao.deleteAll();
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 2; i++) {
-            Item item = new Item("Dummy Item "+ i, "Item Desc " + i, cal.getTime(), false);
+            Item item = new Item("Dummy Item "+ i,
+                    "Lorem Ipsum is simply dummy text of the printing and " +
+                            "typesetting industry. Lorem Ipsum has been the industry's standard " +
+                            "dummy text ever since the 1500s " + i, cal.getTime(), false);
             itemDao.insert(item);
         }
 

@@ -52,11 +52,9 @@ public class NotificationJobService extends JobService {
 
     @Override
     public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
-
         createNotificationChannel();
-        final PendingIntent contentPendingIntent = PendingIntent.getActivity
-                (this, 0,
-                        new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent= new Intent(this, MainActivity.class);
+        final PendingIntent contentPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         final NotificationCompat.Builder builder = new NotificationCompat.Builder
                 (this, PRIMARY_CHANNEL_ID);
         itemRepository = new ItemRepository(getApplication());

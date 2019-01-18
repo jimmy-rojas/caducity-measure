@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity android:name="com.util.cbba.caducitymeasure.MainActivity"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode= "singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
