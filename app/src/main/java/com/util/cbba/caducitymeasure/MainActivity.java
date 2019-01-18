@@ -1,10 +1,15 @@
 package com.util.cbba.caducitymeasure;
 
+import android.app.ActivityManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,14 +25,17 @@ import com.firebase.jobdispatcher.Trigger;
 import com.util.cbba.caducitymeasure.ui.main.AddEntryFragment;
 import com.util.cbba.caducitymeasure.ui.main.MainFragment;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    protected FragmentManager fragmentManager;
-    protected Fragment currentFragment;
+    private FragmentManager fragmentManager;
+    private Fragment currentFragment;
+    private MenuItem cancelScheduleMeu;
+    private MenuItem startScheduleMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +54,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setupNotificationOptions(boolean isServiceRunning) {
+        startScheduleMenu.setVisible(!isServiceRunning);
+        cancelScheduleMeu.setVisible(isServiceRunning);
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notification_menu, menu);
+        startScheduleMenu = menu.findItem(R.id.startSchedule);
+        cancelScheduleMeu = menu.findItem(R.id.cancelSchedule);
+        setupNotificationOptions(isServiceRunning(NotificationJobService.class.getName()));
+        /*setupNotificationOptions(isServiceRunning(NotificationJobService.class));
+        setupNotificationOptions(isJobServiceOn(NotificationJobService.class));*/
         return true;
     }
 
@@ -56,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.startSchedule:
                 scheduleJob();
+                setupNotificationOptions(true);
                 return true;
             case R.id.cancelSchedule:
                 cancelJobs();
+                setupNotificationOptions(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -67,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void scheduleJob() {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this.getApplicationContext()));
-        final int periodicity = (int) TimeUnit.HOURS.toSeconds(0); // Every 1 hour periodicity expressed as seconds
-        final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(1); // a small(ish) window of time when triggering is OK
+        final int periodicity = (int) TimeUnit.HOURS.toSeconds(1); // Every 1 hour periodicity expressed as seconds
+        final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(0); // a small(ish) window of time when triggering is OK
 
         Job myJob = dispatcher.newJobBuilder()
                 // the JobService that will be called
@@ -88,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 // constraints that need to be satisfied for the job to run
                 .setConstraints(Constraint.ON_ANY_NETWORK)
                 .build();
-
         dispatcher.mustSchedule(myJob);
         Toast.makeText(this, R.string.job_scheduled, Toast.LENGTH_SHORT).show();
     }
@@ -135,6 +154,48 @@ public class MainActivity extends AppCompatActivity {
     public void navigateToAdd() {
         navigate(AddEntryFragment.newInstance(), StackFlag.STACK, MainActivity.TAG);
     }
+
+    private boolean isServiceRunning(String serviceClassName) {
+        Log.i(TAG, "Verifying Service running for: " + serviceClassName);
+        ActivityManager manager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            Log.d(TAG, String.format("Service:%s", service.service.getClassName()));
+            if (serviceClassName.equalsIgnoreCase(service.service.getClassName())) {
+                Log.i(TAG, "Notification Service Is On");
+                return true;
+            }
+        }
+        Log.i(TAG, "Notification Service Is Off");
+        return false;
+    }
+
+    /*private boolean isServiceRunning(Class<?> serviceClass) {
+        final ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
+            Log.d(TAG, String.format("Service:%s", runningServiceInfo.service.getClassName()));
+            if (runningServiceInfo.service.getClassName().equals(serviceClass.getName())) {
+                Log.i(TAG, "Notification Service Is On");
+                return true;
+            }
+        }
+        Log.i(TAG, "Notification Service Is Off");
+        return false;
+    }
+
+    private boolean isJobServiceOn(Class<?> serviceClass) {
+        JobScheduler scheduler = (JobScheduler) getApplicationContext().getSystemService( Context.JOB_SCHEDULER_SERVICE ) ;
+        for ( JobInfo jobInfo : scheduler.getAllPendingJobs() ) {
+            Log.d(TAG, String.format("Service:%s", jobInfo.getService().getClassName()));
+            if ( jobInfo.getService().getClassName().equals(serviceClass.getName()) ) {
+                Log.i(TAG, "Notification Service Is On");
+                return true;
+            }
+        }
+        Log.i(TAG, "Notification Service Is Off");
+        return false ;
+    }*/
 
     public enum StackFlag {
         STACK,

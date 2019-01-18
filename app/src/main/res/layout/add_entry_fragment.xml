@@ -16,13 +16,14 @@
         android:layout_centerVertical="true"
         android:drawableLeft="@drawable/ic_menu_schedule_set"
         android:textAlignment="textStart"
-        android:text="Selectcionar Fecha" />
+        android:text="Seleccionar Fecha" />
 
     <TextView
         android:id="@+id/expDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        style="@style/nameStyle"
         android:hint="@string/expDateHint" />
 
     <android.support.design.widget.TextInputLayout

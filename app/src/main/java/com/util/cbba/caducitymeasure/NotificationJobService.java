@@ -20,32 +20,23 @@ public class NotificationJobService extends JobService {
     private ItemRepository itemRepository;
 
     // Notification channel ID.
-    private static final String PRIMARY_CHANNEL_ID =
-            "primary_notification_channel";
+    private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
 
     private void createNotificationChannel() {
-
         // Define notification manager object.
-        mNotifyManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.
-        if (android.os.Build.VERSION.SDK_INT >=
-                android.os.Build.VERSION_CODES.O) {
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             // Create the NotificationChannel with all the parameters.
-            NotificationChannel notificationChannel = new NotificationChannel
-                    (PRIMARY_CHANNEL_ID,
-                            "Job Service notification",
-                            NotificationManager.IMPORTANCE_HIGH);
-
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    PRIMARY_CHANNEL_ID,
+                    "Job Service notification",
+                    NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
-            notificationChannel.setDescription
-                    ("Notifications from Job Service");
-
+            notificationChannel.setDescription("Notifications from Job Service");
             mNotifyManager.createNotificationChannel(notificationChannel);
         }
     }
@@ -69,10 +60,9 @@ public class NotificationJobService extends JobService {
                             .setPriority(NotificationCompat.PRIORITY_MAX)
                             .setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE)
                             .setAutoCancel(true);
-
                     mNotifyManager.notify(0, builder.build());
                 } else {
-                    Log.v(TAG, "Nothing to expire right now");
+                    Log.d(TAG, "Nothing to expire right now");
                 }
             }
         };
