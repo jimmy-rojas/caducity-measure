@@ -15,6 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:drawableLeft="@drawable/ic_menu_schedule_set"
+        android:textAlignment="textStart"
         android:text="Selectcionar Fecha" />
 
     <TextView
@@ -51,5 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:drawableLeft="@drawable/ic_save_new"
+        android:textAlignment="textStart"
         android:text="Agregar Registro" />
 </LinearLayout>

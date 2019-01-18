@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +20,20 @@ import com.util.cbba.caducitymeasure.MainActivity;
 import com.util.cbba.caducitymeasure.R;
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 import com.util.cbba.caducitymeasure.ui.main.adapter.ItemListAdapter;
+import com.util.cbba.caducitymeasure.ui.main.callback.IOnItemEvent;
 import com.util.cbba.caducitymeasure.ui.main.enums.Period;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
+
+    private static final String TAG = MainFragment.class.getSimpleName();
     private MainViewModel mViewModel;
     private ItemListAdapter adapter;
 
     private MainActivity mainActivity;
+    private Period selectedPeriod;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -48,6 +53,15 @@ public class MainFragment extends Fragment {
         });
 
         adapter = new ItemListAdapter(getActivity().getApplicationContext());
+        adapter.setItemEvent(new IOnItemEvent() {
+            @Override
+            public void onItemResolve(Item item) {
+                item.setResolved(true);
+                mViewModel.update(item);
+                Log.d(TAG, item.getName());
+                reloadData();
+            }
+        });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         recyclerView.setHasFixedSize(true);
@@ -85,10 +99,16 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        loadItemsByPeriod(Period.EXPIRE_TODAY);
+        selectedPeriod = Period.EXPIRE_TODAY;
+        reloadData();
+    }
+
+    private void reloadData() {
+        loadItemsByPeriod(selectedPeriod);
     }
 
     private void loadItemsByPeriod(Period period) {
+        selectedPeriod = period;
         Observer<List<Item>> obsChanges = new Observer<List<Item>>() {
             @Override
             public void onChanged(@Nullable final List<Item> itemList) {

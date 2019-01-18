@@ -19,12 +19,12 @@ public class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
         itemDao.deleteAll();
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 2; i++) {
-            Item item = new Item("Dummy Item", "", cal.getTime(), false);
+            Item item = new Item("Dummy Item "+ i, "Item Desc " + i, cal.getTime(), false);
             itemDao.insert(item);
         }
 
         cal.add(Calendar.DATE, 1);
-        Item item = new Item("Dummy Item, +1", "Any Desc", cal.getTime(), false);
+        Item item = new Item("Dummy Item, +1", "Any Desc +1", cal.getTime(), false);
         itemDao.insert(item);
         return null;
     }

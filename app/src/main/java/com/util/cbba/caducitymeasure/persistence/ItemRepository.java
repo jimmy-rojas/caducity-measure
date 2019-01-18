@@ -29,6 +29,11 @@ public class ItemRepository implements IItemDao {
     }
 
     @Override
+    public void update(Item item) {
+        new UpdateAsyncTask(itemDao).execute(item);
+    }
+
+    @Override
     public void deleteById(long id) {
 
     }
@@ -74,6 +79,20 @@ public class ItemRepository implements IItemDao {
         @Override
         protected Void doInBackground(final Item... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+    private static class UpdateAsyncTask extends AsyncTask<Item, Void, Void> {
+
+        private IItemDao mAsyncTaskDao;
+
+        UpdateAsyncTask(IItemDao itemDao) {
+            mAsyncTaskDao = itemDao;
+        }
+
+        @Override
+        protected Void doInBackground(final Item... params) {
+            mAsyncTaskDao.update(params[0]);
             return null;
         }
     }

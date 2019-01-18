@@ -30,6 +30,11 @@ public class MainViewModel extends AndroidViewModel implements IItemDao {
     }
 
     @Override
+    public void update(Item item) {
+        itemRepository.update(item);
+    }
+
+    @Override
     public void deleteById(long id) {
 
     }
