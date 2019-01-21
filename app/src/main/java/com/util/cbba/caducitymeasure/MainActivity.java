@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void scheduleJob() {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this.getApplicationContext()));
-        final int periodicity = (int) TimeUnit.HOURS.toSeconds(1); // Every 1 hour periodicity expressed as seconds
+        final int periodicity = (int) TimeUnit.HOURS.toSeconds(4); // Every 1 hour periodicity expressed as seconds
         final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(0); // a small(ish) window of time when triggering is OK
 
         Job myJob = dispatcher.newJobBuilder()

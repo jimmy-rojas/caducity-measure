@@ -37,13 +37,16 @@ public interface IItemDao {
     @Query("SELECT * from item ORDER BY expiration_date ASC")
     LiveData<List<Item>> getAllItemsByExpiration();
 
-    @Query("SELECT COUNT() from item WHERE date(datetime(expiration_date / 1000 , 'unixepoch')) = date('now') AND resolved = 0")
-    LiveData<Integer> isThereItemsToExpireNow();
-
     @Query("SELECT * from item WHERE date(datetime(expiration_date / 1000 , 'unixepoch')) = date('now')")
     LiveData<List<Item>> getItemsToExpireNow();
 
     @Query("SELECT * from item WHERE date(datetime(expiration_date / 1000 , 'unixepoch')) > date('now') ORDER BY expiration_date ASC")
     LiveData<List<Item>> getAllItemsByExpirationNext();
+
+    @Query("SELECT * FROM item WHERE expiration_date BETWEEN :from AND :to")
+    LiveData<List<Item>> getAllItemsByExpirationNext3Days(Date from, Date to);
+
+    @Query("SELECT COUNT() FROM item WHERE expiration_date BETWEEN :from AND :to AND resolved = 0")
+    LiveData<Integer> getAllItemsByExpirationNextNDaysPending(Date from, Date to);
 
 }

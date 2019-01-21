@@ -1,6 +1,7 @@
 package com.util.cbba.caducitymeasure.ui.main.enums;
 
 public enum Period {
+    EXPIRE_TODAY_AND_3DAYS("Vencen Hoy y los 3 siguientes dias"),
     EXPIRE_TODAY("Vencen Hoy"),
     EXPIRE_SOON("Vencen Pronto"),
     EXPIRE_ALL("Mostrar Todo"),

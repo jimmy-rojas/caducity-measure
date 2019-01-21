@@ -8,6 +8,8 @@ import com.util.cbba.caducitymeasure.persistence.IItemDao;
 import com.util.cbba.caducitymeasure.persistence.ItemRepository;
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel implements IItemDao {
@@ -55,11 +57,6 @@ public class MainViewModel extends AndroidViewModel implements IItemDao {
     }
 
     @Override
-    public LiveData<Integer> isThereItemsToExpireNow() {
-        return itemRepository.isThereItemsToExpireNow();
-    }
-
-    @Override
     public LiveData<List<Item>> getItemsToExpireNow() {
         return itemRepository.getItemsToExpireNow();
     }
@@ -67,5 +64,19 @@ public class MainViewModel extends AndroidViewModel implements IItemDao {
     @Override
     public LiveData<List<Item>> getAllItemsByExpirationNext() {
         return itemRepository.getAllItemsByExpirationNext();
+    }
+
+    @Override
+    public LiveData<List<Item>> getAllItemsByExpirationNext3Days(Date from, Date to) {
+        return itemRepository.getAllItemsByExpirationNext3Days(from, to);
+    }
+
+    @Override
+    public LiveData<Integer> getAllItemsByExpirationNextNDaysPending(Date from, Date to) {
+        return itemRepository.getAllItemsByExpirationNextNDaysPending(from, to);
+    }
+
+    public LiveData<List<Item>> getAllItemsByExpirationNext3Days() {
+        return itemRepository.getAllItemsByExpirationNext3Days();
     }
 }

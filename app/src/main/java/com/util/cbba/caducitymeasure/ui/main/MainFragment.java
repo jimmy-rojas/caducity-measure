@@ -24,6 +24,7 @@ import com.util.cbba.caducitymeasure.ui.main.callback.IOnItemEvent;
 import com.util.cbba.caducitymeasure.ui.main.enums.Period;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainFragment extends Fragment {
@@ -71,10 +72,10 @@ public class MainFragment extends Fragment {
 
     private void setupSpinner(View view) {
         List<Period> periods = new ArrayList<>();
-        periods.add(Period.EXPIRE_TODAY);
-        periods.add(Period.EXPIRE_SOON);
-        periods.add(Period.EXPIRE_ALL);
-        periods.add(Period.EXPIRE_ALL_BY_DATE);
+        for (Period p :
+                Period.values()) {
+            periods.add(p);
+        }
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinnerList);
 
@@ -99,7 +100,7 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        selectedPeriod = Period.EXPIRE_TODAY;
+        selectedPeriod = Period.EXPIRE_TODAY_AND_3DAYS;
         reloadData();
     }
 
@@ -116,6 +117,9 @@ public class MainFragment extends Fragment {
             }
         };
         switch (period) {
+            case EXPIRE_TODAY_AND_3DAYS:
+                mViewModel.getAllItemsByExpirationNext3Days().observe(this, obsChanges);
+                break;
             case EXPIRE_TODAY:
                 mViewModel.getItemsToExpireNow().observe(this, obsChanges);
                 break;

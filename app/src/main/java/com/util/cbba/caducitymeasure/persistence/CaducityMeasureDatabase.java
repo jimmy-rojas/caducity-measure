@@ -7,6 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 
@@ -14,6 +15,7 @@ import com.util.cbba.caducitymeasure.persistence.entity.Item;
 @TypeConverters({Converters.class})
 public abstract class CaducityMeasureDatabase extends RoomDatabase {
 
+    private static final String TAG = CaducityMeasureDatabase.class.getSimpleName();
     private static volatile CaducityMeasureDatabase INSTANCE;
 
     public abstract IItemDao itemDao();
@@ -38,6 +40,7 @@ public abstract class CaducityMeasureDatabase extends RoomDatabase {
                 @Override
                 public void onOpen (@NonNull SupportSQLiteDatabase db){
                     super.onOpen(db);
+                    Log.d(TAG, "DDBB ready for use");
                     new PopulateDbAsync(INSTANCE).execute();
                 }
             };

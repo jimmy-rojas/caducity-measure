@@ -25,10 +25,11 @@ public class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
                             "dummy text ever since the 1500s " + i, cal.getTime(), false);
             itemDao.insert(item);
         }
-
-        cal.add(Calendar.DATE, 1);
-        Item item = new Item("Dummy Item, +1", "Any Desc +1", cal.getTime(), false);
-        itemDao.insert(item);
+        for (int i = 1; i <= 4; i++) {
+            cal.add(Calendar.DATE, 1);
+            Item item = new Item("Dummy Item, +" + i, "Any Desc +" + i, cal.getTime(), false);
+            itemDao.insert(item);
+        }
         return null;
     }
 }

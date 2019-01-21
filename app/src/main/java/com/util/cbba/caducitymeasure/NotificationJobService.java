@@ -12,6 +12,10 @@ import android.util.Log;
 
 import com.firebase.jobdispatcher.JobService;
 import com.util.cbba.caducitymeasure.persistence.ItemRepository;
+import com.util.cbba.caducitymeasure.persistence.entity.Item;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class NotificationJobService extends JobService {
 
@@ -66,7 +70,15 @@ public class NotificationJobService extends JobService {
                 }
             }
         };
-        itemRepository.isThereItemsToExpireNow().observeForever(obsResult);
+
+        Calendar from = Calendar.getInstance();
+        from.set(Calendar.HOUR_OF_DAY, 0);
+        from.set(Calendar.MINUTE, 0);
+        Calendar to = Calendar.getInstance();
+        to.add(Calendar.DATE, 3);
+        to.set(Calendar.HOUR_OF_DAY, 23);
+        to.set(Calendar.MINUTE, 59);
+        itemRepository.getAllItemsByExpirationNextNDaysPending(from.getTime(), to.getTime()).observeForever(obsResult);
         return false;
     }
 

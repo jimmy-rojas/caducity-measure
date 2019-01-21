@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ItemRepository implements IItemDao {
@@ -54,11 +56,6 @@ public class ItemRepository implements IItemDao {
     }
 
     @Override
-    public LiveData<Integer> isThereItemsToExpireNow() {
-        return itemDao.isThereItemsToExpireNow();
-    }
-
-    @Override
     public LiveData<List<Item>> getItemsToExpireNow() {
         return itemDao.getItemsToExpireNow();
     }
@@ -66,6 +63,27 @@ public class ItemRepository implements IItemDao {
     @Override
     public LiveData<List<Item>> getAllItemsByExpirationNext() {
         return itemDao.getAllItemsByExpirationNext();
+    }
+
+    @Override
+    public LiveData<List<Item>> getAllItemsByExpirationNext3Days(Date from, Date to) {
+        return itemDao.getAllItemsByExpirationNext3Days(from, to);
+    }
+
+    @Override
+    public LiveData<Integer> getAllItemsByExpirationNextNDaysPending(Date from, Date to) {
+        return itemDao.getAllItemsByExpirationNextNDaysPending(from, to);
+    }
+
+    public LiveData<List<Item>> getAllItemsByExpirationNext3Days() {
+        Calendar from = Calendar.getInstance();
+        from.set(Calendar.HOUR_OF_DAY, 0);
+        from.set(Calendar.MINUTE, 0);
+        Calendar to = Calendar.getInstance();
+        to.add(Calendar.DATE, 3);
+        to.set(Calendar.HOUR_OF_DAY, 23);
+        to.set(Calendar.MINUTE, 59);
+        return itemDao.getAllItemsByExpirationNext3Days(from.getTime(), to.getTime());
     }
 
     private static class InsertAsyncTask extends AsyncTask<Item, Void, Void> {
