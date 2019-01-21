@@ -41,7 +41,7 @@ public abstract class CaducityMeasureDatabase extends RoomDatabase {
                 public void onOpen (@NonNull SupportSQLiteDatabase db){
                     super.onOpen(db);
                     Log.d(TAG, "DDBB ready for use");
-                    new PopulateDbAsync(INSTANCE).execute();
+//                    new PopulateDbAsync(INSTANCE).execute();
                 }
             };
 }
