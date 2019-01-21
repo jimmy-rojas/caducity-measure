@@ -7,4 +7,12 @@
     <string name="expDateHint">Fecha de expiracion</string>
     <string name="expDescHint">Descripcion</string>
     <string name="itemNameHint">Nombre del Item</string>
+
+    <string name="job_scheduled">Notificaciones habilidatas</string>
+    <string name="jobs_canceled">Notificaciones deshabilidatas</string>
+
+    <string name="notificacion_title">Notificacion.</string>
+    <string name="notificacion_msg">Revisar Expiracion de %1$s Item(s)</string>
+    <string name="enable_alert" >Activar Notificaciones</string>
+    <string name="disable_alert" >Desactivar Notificaciones</string>
 </resources>

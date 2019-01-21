@@ -16,7 +16,7 @@ public abstract class CaducityMeasureDatabase extends RoomDatabase {
 
     private static volatile CaducityMeasureDatabase INSTANCE;
 
-    public abstract ItemDao itemDao();
+    public abstract IItemDao itemDao();
 
     static CaducityMeasureDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

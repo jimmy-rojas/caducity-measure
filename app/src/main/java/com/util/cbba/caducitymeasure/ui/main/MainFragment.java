@@ -9,23 +9,31 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import com.util.cbba.caducitymeasure.MainActivity;
 import com.util.cbba.caducitymeasure.R;
 import com.util.cbba.caducitymeasure.persistence.entity.Item;
 import com.util.cbba.caducitymeasure.ui.main.adapter.ItemListAdapter;
+import com.util.cbba.caducitymeasure.ui.main.callback.IOnItemEvent;
+import com.util.cbba.caducitymeasure.ui.main.enums.Period;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
 
+    private static final String TAG = MainFragment.class.getSimpleName();
     private MainViewModel mViewModel;
     private ItemListAdapter adapter;
 
     private MainActivity mainActivity;
+    private Period selectedPeriod;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -40,26 +48,88 @@ public class MainFragment extends Fragment {
         view.findViewById(R.id.addNew).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.navigate(AddEntryFragment.newInstance());
+                mainActivity.navigateToAdd();
             }
         });
+
         adapter = new ItemListAdapter(getActivity().getApplicationContext());
+        adapter.setItemEvent(new IOnItemEvent() {
+            @Override
+            public void onItemResolve(Item item) {
+                item.setResolved(true);
+                mViewModel.update(item);
+                Log.d(TAG, item.getName());
+                reloadData();
+            }
+        });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-
+        recyclerView.setHasFixedSize(true);
+        setupSpinner(view);
         return view;
+    }
+
+    private void setupSpinner(View view) {
+        List<Period> periods = new ArrayList<>();
+        periods.add(Period.EXPIRE_TODAY);
+        periods.add(Period.EXPIRE_SOON);
+        periods.add(Period.EXPIRE_ALL);
+        periods.add(Period.EXPIRE_ALL_BY_DATE);
+
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinnerList);
+
+        ArrayAdapter adapter = new ArrayAdapter(getActivity().getApplicationContext(), R.layout.spinner_period, periods);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadItemsByPeriod((Period)adapterView.getItemAtPosition(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mViewModel.getAllWords().observe(this, new Observer<List<Item>>() {
+        selectedPeriod = Period.EXPIRE_TODAY;
+        reloadData();
+    }
+
+    private void reloadData() {
+        loadItemsByPeriod(selectedPeriod);
+    }
+
+    private void loadItemsByPeriod(Period period) {
+        selectedPeriod = period;
+        Observer<List<Item>> obsChanges = new Observer<List<Item>>() {
             @Override
-            public void onChanged(@Nullable final List<Item> words) {
-                adapter.setItems(mViewModel.getAllWords().getValue());
+            public void onChanged(@Nullable final List<Item> itemList) {
+                adapter.setItems(itemList);
             }
-        });
+        };
+        switch (period) {
+            case EXPIRE_TODAY:
+                mViewModel.getItemsToExpireNow().observe(this, obsChanges);
+                break;
+            case EXPIRE_SOON:
+                mViewModel.getAllItemsByExpirationNext().observe(this, obsChanges);
+                break;
+            case EXPIRE_ALL:
+                mViewModel.getAllItems().observe(this, obsChanges);
+                break;
+            case EXPIRE_ALL_BY_DATE:
+                mViewModel.getAllItemsByExpiration().observe(this, obsChanges);
+                break;
+        }
+
     }
 
     @Override

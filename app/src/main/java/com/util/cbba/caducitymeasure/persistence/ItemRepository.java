@@ -8,36 +8,91 @@ import com.util.cbba.caducitymeasure.persistence.entity.Item;
 
 import java.util.List;
 
-public class ItemRepository {
+public class ItemRepository implements IItemDao {
 
-    private ItemDao itemDao;
-    private LiveData<List<Item>> iteList;
+    private static final String TAG = ItemRepository.class.getSimpleName();
+    private IItemDao itemDao;
 
     public ItemRepository(Application application) {
         CaducityMeasureDatabase db = CaducityMeasureDatabase.getDatabase(application);
         itemDao = db.itemDao();
-        iteList = itemDao.getAllItems();
     }
 
-    public LiveData<List<Item>> getAllItems() {
-        return iteList;
-    }
-
+    @Override
     public void insert(Item item) {
-        new insertAsyncTask(itemDao).execute(item);
+        new InsertAsyncTask(itemDao).execute(item);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Item, Void, Void> {
+    @Override
+    public void delete(Item item) {
 
-        private ItemDao mAsyncTaskDao;
+    }
 
-        insertAsyncTask(ItemDao itemDao) {
+    @Override
+    public void update(Item item) {
+        new UpdateAsyncTask(itemDao).execute(item);
+    }
+
+    @Override
+    public void deleteById(long id) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public LiveData<List<Item>> getAllItems() {
+        return itemDao.getAllItems();
+    }
+
+    @Override
+    public LiveData<List<Item>> getAllItemsByExpiration() {
+        return itemDao.getAllItemsByExpiration();
+    }
+
+    @Override
+    public LiveData<Integer> isThereItemsToExpireNow() {
+        return itemDao.isThereItemsToExpireNow();
+    }
+
+    @Override
+    public LiveData<List<Item>> getItemsToExpireNow() {
+        return itemDao.getItemsToExpireNow();
+    }
+
+    @Override
+    public LiveData<List<Item>> getAllItemsByExpirationNext() {
+        return itemDao.getAllItemsByExpirationNext();
+    }
+
+    private static class InsertAsyncTask extends AsyncTask<Item, Void, Void> {
+
+        private IItemDao mAsyncTaskDao;
+
+        InsertAsyncTask(IItemDao itemDao) {
             mAsyncTaskDao = itemDao;
         }
 
         @Override
         protected Void doInBackground(final Item... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+    private static class UpdateAsyncTask extends AsyncTask<Item, Void, Void> {
+
+        private IItemDao mAsyncTaskDao;
+
+        UpdateAsyncTask(IItemDao itemDao) {
+            mAsyncTaskDao = itemDao;
+        }
+
+        @Override
+        protected Void doInBackground(final Item... params) {
+            mAsyncTaskDao.update(params[0]);
             return null;
         }
     }

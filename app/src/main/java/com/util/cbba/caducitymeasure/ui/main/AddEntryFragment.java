@@ -59,11 +59,11 @@ public class AddEntryFragment extends Fragment {
                     return;
                 }
                 itemName.setError(null);
-                Item item = new Item(itemName.getText().toString(), expDesc.getText().toString(), pickedDate.getTime());
+                Item item = new Item(itemName.getText().toString(), expDesc.getText().toString(), pickedDate.getTime(), false);
                 mViewModel.insert(item);
                 cleanForm();
                 Toast.makeText(getActivity(), "Guardado", Toast.LENGTH_LONG).show();
-                mainActivity.navigate(MainFragment.newInstance());
+                mainActivity.navigateToRoot();
             }
         });
         view.findViewById(R.id.btnDate).setOnClickListener(new View.OnClickListener() {
