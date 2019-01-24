@@ -17,7 +17,7 @@ import java.util.List;
 public interface IItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Item item);
+    long insert(Item item);
 
     @Delete
     void delete(Item item);

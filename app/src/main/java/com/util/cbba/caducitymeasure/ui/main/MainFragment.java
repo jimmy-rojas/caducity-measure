@@ -60,7 +60,7 @@ public class MainFragment extends Fragment {
                 item.setResolved(true);
                 mViewModel.update(item);
                 Log.d(TAG, item.getName());
-                reloadData();
+//                reloadData();
             }
         });
         recyclerView.setAdapter(adapter);

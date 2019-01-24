@@ -26,6 +26,7 @@ public abstract class CaducityMeasureDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         CaducityMeasureDatabase.class, "caducity_measure_database.db")
+                        .allowMainThreadQueries()
                         .addCallback(sRoomDatabaseCallback)
                         .build();
                 }

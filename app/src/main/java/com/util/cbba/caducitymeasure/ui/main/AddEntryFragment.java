@@ -1,6 +1,8 @@
 package com.util.cbba.caducitymeasure.ui.main;
 
 import android.app.DatePickerDialog;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ public class AddEntryFragment extends Fragment {
     private MainActivity mainActivity;
 
     private TextView expDate;
+    private TextView newItemId;
     private TextInputEditText itemName;
     private TextInputEditText expDesc;
     private DatePickerDialog datePickerDialog;
@@ -44,6 +47,7 @@ public class AddEntryFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_entry_fragment, container, false);
         expDate = view.findViewById(R.id.expDate);
+        newItemId = view.findViewById(R.id.newItemId);
         itemName = view.findViewById(R.id.itemName);
         expDesc = view.findViewById(R.id.expDesc);
         view.findViewById(R.id.addNewEntry).setOnClickListener(new View.OnClickListener() {
@@ -60,10 +64,15 @@ public class AddEntryFragment extends Fragment {
                 }
                 itemName.setError(null);
                 Item item = new Item(itemName.getText().toString(), expDesc.getText().toString(), pickedDate.getTime(), false);
-                mViewModel.insert(item);
-                cleanForm();
-                Toast.makeText(getActivity(), "Guardado", Toast.LENGTH_LONG).show();
-                mainActivity.navigateToRoot();
+
+                mViewModel.insert(item).observeForever(new Observer<Long>() {
+                    @Override
+                    public void onChanged(@Nullable Long aLong) {
+                        cleanForm();
+                        Toast.makeText(getActivity(), "Guardado. " + aLong, Toast.LENGTH_LONG).show();
+                        newItemId.setText("#: " + aLong.toString());
+                    }
+                });
             }
         });
         view.findViewById(R.id.btnDate).setOnClickListener(new View.OnClickListener() {
@@ -79,6 +88,12 @@ public class AddEntryFragment extends Fragment {
                         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
+            }
+        });
+        view.findViewById(R.id.goBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.navigateToRoot();
             }
         });
         return view;

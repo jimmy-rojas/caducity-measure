@@ -34,6 +34,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.WordVi
     public void onBindViewHolder(WordViewHolder holder, int position) {
         if (mWords != null) {
             final Item current = mWords.get(position);
+            holder.itemId.setText("#: " + String.valueOf(current.getId()));
             holder.expDate.setText(DateUtils.getDateSimple(current.getExpirationDate()));
             holder.itemName.setText(current.getName());
             holder.textDesc.setText(TextUtils.isEmpty(current.getDescription()) ? " " : current.getDescription());
@@ -77,6 +78,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.WordVi
     }
 
     class WordViewHolder extends RecyclerView.ViewHolder {
+        private final TextView itemId;
         private final TextView itemName;
         private final TextView expDate;
         private final TextView textDesc;
@@ -84,6 +86,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.WordVi
 
         private WordViewHolder(View itemView) {
             super(itemView);
+            itemId = itemView.findViewById(R.id.itemId);
             itemName = itemView.findViewById(R.id.textView);
             expDate = itemView.findViewById(R.id.expDate);
             textDesc = itemView.findViewById(R.id.textDesc);
